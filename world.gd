@@ -6,4 +6,5 @@ extends Node2D
 
 #isso faz o polygon ter o formato da collision
 func _ready():
+	RenderingServer.set_default_clear_color(Color.BLACK)
 	polygon_2d.polygon = collision_polygon_2d.polygon
