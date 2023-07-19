@@ -1,17 +1,58 @@
-[gd_scene load_steps=3 format=3 uid="uid://di5gsiasxvg14"]
+[gd_scene load_steps=5 format=3 uid="uid://di5gsiasxvg14"]
 
 [ext_resource type="Script" path="res://world.gd" id="1_yuijq"]
 [ext_resource type="PackedScene" uid="uid://ckm1gfwnoif2i" path="res://play2.tscn" id="2_y5glu"]
+[ext_resource type="PackedScene" uid="uid://cs503rrije1bc" path="res://spikes.tscn" id="3_qplhx"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_mr0m8"]
+size = Vector2(16, 85)
 
 [node name="World" type="Node2D"]
 script = ExtResource("1_yuijq")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="."]
+collision_mask = 0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
-polygon = PackedVector2Array(24, 0, 24, 152, 64, 152, 88, 128, 120, 128, 120, 176, 152, 176, 152, 112, 184, 112, 320, 64, 320, 96, 320, 208, 0, 208, 0, 0)
+polygon = PackedVector2Array(24, 0, 24, 152, 64, 152, 88, 128, 120, 128, 120, 176, 152, 176, 152, 112, 184, 112, 320.179, 112, 328, 136, 336, 136, 344, 112, 368, 112, 368, 128, 392, 128, 392, 112, 432, 112, 368, 184, 320, 208, 0, 208, 0, 0)
 
 [node name="Polygon2D" type="Polygon2D" parent="StaticBody2D/CollisionPolygon2D"]
 
-[node name="CharacterBody2D" parent="." instance=ExtResource("2_y5glu")]
-position = Vector2(88, 96)
+[node name="Player" parent="." instance=ExtResource("2_y5glu")]
+position = Vector2(40, 24)
+
+[node name="StaticBody2D3" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D3"]
+position = Vector2(352, 45.5)
+shape = SubResource("RectangleShape2D_mr0m8")
+
+[node name="ColorRect" type="ColorRect" parent="StaticBody2D3"]
+offset_left = 344.0
+offset_right = 360.0
+offset_bottom = 88.0
+metadata/_edit_use_anchors_ = true
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(312, 44)
+shape = SubResource("RectangleShape2D_mr0m8")
+
+[node name="ColorRect" type="ColorRect" parent="StaticBody2D2"]
+offset_left = 304.0
+offset_right = 320.0
+offset_bottom = 88.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Spikes" parent="." instance=ExtResource("3_qplhx")]
+position = Vector2(120, 176)
+
+[node name="Spikes2" parent="." instance=ExtResource("3_qplhx")]
+position = Vector2(136, 176)
+
+[node name="Spikes3" parent="." instance=ExtResource("3_qplhx")]
+position = Vector2(368, 128)
+
+[node name="Spikes4" parent="." instance=ExtResource("3_qplhx")]
+position = Vector2(376, 128)

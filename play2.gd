@@ -3,17 +3,22 @@ extends CharacterBody2D
 @export var movement_data : PlayerMovementData
 
 var air_jump = false
+var just_wall_jumped = false
+var was_wall_normal = Vector2.ZERO
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity")
-@onready var coyote_jump_timer = $CoyoteJumpTimer
-
 
 @onready var animated_sprite_2d = $AnimatedSprite2D
+@onready var coyote_jump_timer = $CoyoteJumpTimer
+@onready var starting_position = global_position
+
 
 
 func _physics_process(delta):
 	
 	apply_gravity(delta)
+	
+	handle_wall_jump()
 	
 	handle_jump()
 
@@ -43,19 +48,31 @@ func apply_gravity(delta):
 	if not is_on_floor():
 		velocity.y += gravity * movement_data.gravity_scale * delta
 		
+
+func handle_wall_jump():
+	if not is_on_wall_only(): return
+	var wall_normal = get_wall_normal()
+	if Input.is_action_just_pressed("ui_up"):
+		velocity.x = wall_normal.x * movement_data.speed
+		velocity.y = movement_data.jump_velocity
+		just_wall_jumped = true
+	
+
 func handle_jump():
 	if is_on_floor(): air_jump = true
 	
 	if is_on_floor() or coyote_jump_timer.time_left > 0.0:
 		if Input.is_action_just_pressed("ui_up"):
 			velocity.y = movement_data.jump_velocity
-	if not is_on_floor():
+	
+	elif not is_on_floor():
+		
 		if Input.is_action_just_released("ui_up") and velocity.y < movement_data.jump_velocity / 2:
 			velocity.y = movement_data.jump_velocity /2 
-		if Input.is_action_just_pressed("ui_up") and air_jump:
+			
+		if Input.is_action_just_pressed("ui_up") and air_jump and not just_wall_jumped:
 			velocity.y = movement_data.jump_velocity * 0.8
 			air_jump = false
-
 
 func apply_friction(input_axis, delta):
 	if input_axis == 0 and is_on_floor():
@@ -83,3 +100,6 @@ func update_animations(input_axis):
 		animated_sprite_2d.play("idle")		
 	if not is_on_floor():
 		animated_sprite_2d.play("jump")
+
+func _on_hazard_detector_area_entered(area):
+	global_position = starting_position
